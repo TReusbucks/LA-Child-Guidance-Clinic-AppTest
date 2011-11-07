@@ -1,0 +1,9 @@
+CREATE TABLE `logon` (
+  `userid` int(5) NOT NULL auto_increment,
+  `useremail` varchar(60) NOT NULL default '',
+  `password` varchar(60) NOT NULL default '',
+  `userlevel` int(1) NOT NULL default '0',
+  `fname` varchar(20) NOT NULL default '',
+  `lname` varchar(20) NOT NULL default '',
+  PRIMARY KEY  (`userid`)
+) TYPE=MyISAM
