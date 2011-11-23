@@ -29,13 +29,14 @@
 	}
 	*/
 	
-	if($log->login($user, $pass)){
+	if($log->login($user, $pass, $level)){
 		session_write_close();
 		header("location: index.php");
 		exit;
 	} else {
-		if(isset($_SESSION['LOG_ERR']) {
+		if(isset($_SESSION['LOG_ERR'])) {
 			$_SESSION['ERRMSG'] = 'This Account has yet to be Verified.';
+			unset($_SESSION['LOG_ERR']);
 		} else {
 			$_SESSION['ERRMSG'] = 'That User Name/Password Combination is Invalid.';
 		}

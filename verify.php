@@ -9,4 +9,5 @@
 	} else {
 		echo $_SESSION['VER_ERR'];
 	}
+	echo '<br/><a href="index.php">Home Page</a>'
 ?>

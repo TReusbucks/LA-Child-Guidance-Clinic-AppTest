@@ -48,7 +48,12 @@ function check(form){
 </script>
 </head>
 <body>
-<form action="createAppAccount.php" method=POST onsubmit="return check(this);">
+<?php
+session_start();
+require_once ("class_auth.php");
+$log = new auth_emp();
+if(isset($_SESSION['SESS_LEVEL']) && $_SESSION['SESS_LEVEL'] == $log->adminLevel): ?>
+<form action="createEmpAccount.php" method=POST onsubmit="return check(this);">
 <table>
 	<tr>
 		<td>First Name:</td>
@@ -75,6 +80,15 @@ function check(form){
 		<td><input type="password" name="rpassword"/></td>
 	</tr>
 	<tr>
+		<td> Account Type: </td>
+		<td>
+			<select name="level">
+			<option value="1">HR</option>
+			<option value="2">Hiring Manager</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
 	<td></td>
 	<td><input type="submit" value="Register" /></td>
 	</tr>
@@ -82,11 +96,13 @@ function check(form){
 </form>
 <p id='error'>
 <?php 
-session_start();
 if(isset($_SESSION['ERRMSG'])){
 	echo $_SESSION['ERRMSG'];
 	unset($_SESSION['ERRMSG']);
 }?>
 </p>
+<?php else: 
+	echo "You are not an admin! What are you doing here!";
+endif; ?>
 </body>
 </html>

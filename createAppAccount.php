@@ -7,10 +7,9 @@
 	$fname = @trim($_POST['fname']); 
 	$lname = @trim($_POST['lname']);
 
-	if($log->register($user, $pass, "0", $fname, $lname)){
+	if($log->register($user, $pass, $log->candLevel, $fname, $lname)){
 		$log->sendEmail($user);
 		session_write_close();
-		exit;
 		/*
 		if($log->sendEmail($user,$fname,$lname)) {
 			session_write_close();
@@ -25,7 +24,12 @@
 		}
 		*/
 	} else {
-		$_SESSION['ERRMSG'] = "REGISTER ERROR";
+		if(isset($_SESSION['REG_ERR'])) {
+			$_SESSION['ERRMSG'] = $_SESSION['REG_ERR'];
+			unset($_SESSION['REG_ERR']);
+		} else {
+			$_SESSION['ERRMSG'] = "An unknown error has occurred!";
+		}
 		session_write_close();
 		header("location: register.php");
 		exit;

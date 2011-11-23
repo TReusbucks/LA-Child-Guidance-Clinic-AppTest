@@ -8,7 +8,10 @@ class auth_emp {
 	
 	var $address = 'localhost/lacgc/verify.php';
 	
-	var $userTable = 'employee_login';
+	var $userTable = 'candidates';
+	var $empTable = 'employees';
+	var $workTable = 'workxp'; //WORK EXPERIENCE TABLE, NOT JOB POSITIONS TABLE
+	
 	var $userColumn = 'useremail';
 	var $passColumn = 'password';
 	var $idColumn = 'userid';
@@ -17,7 +20,20 @@ class auth_emp {
 	var $fnameColumn = 'fname';
 	var $lnameColumn = 'lname';
 	
+	var $empUserColumn = 'empemail';
+	var $empIdColumn = 'empid';
+	
+	var $candLevel = "0";
+	var $hrLevel = "1";
+	var $hiringLevel = "2";
+	var $adminLevel = "3";
+	
+	
 	var $secret ='$2a-=<><!$cxv?&ho9as0';
+	
+	var $appTable = 'applications';
+	var $jobIdColumn = 'posid';
+	var $baseJob = 1;
 	
 	function connect(){
 		$con = mysql_connect($this->hostname, $this->dbUsername, $this->dbPassword);
@@ -40,39 +56,60 @@ class auth_emp {
 		return $result;
 	}
 	
-	function login($username, $password){
+	function login($username, $password, $level){
 		require('PasswordHash.php');
 		session_start();
 		$con = $this->connect();
 		$pwd = new PasswordHash(8, FALSE);
 		
-		$result = $this->qry("SELECT * FROM ".$this->userTable." WHERE ".$this->userColumn."='%s';" , $username);
-		if(!$result){
-			mysql_close($con);
-			return false;
+		if($level == $this->candLevel){
+			$result = $this->qry("SELECT * FROM ".$this->userTable." WHERE ".$this->userColumn."='%s';" , $username);
+			if(!$result){
+				mysql_close($con);
+				return false;
+			}
 		}
-		
+		else {
+			$result = $this->qry("SELECT * FROM ".$this->empTable." WHERE ".$this->empUserColumn."='%s';" , $username);
+			if(!$result){
+				mysql_close($con);
+				return false;
+			}
+		}
+			
 		$row=mysql_fetch_assoc($result);
 		mysql_close($con);
 		if($pwd->CheckPassword($password, $row[$this->passColumn])){
 			//Logged in!
-			if($row[$this->active]){
+			if($level == $this->candLevel){
+				if($row[$this->active]){
+					session_regenerate_id();
+					$_SESSION['SESS_MEMBER_ID'] = $row[$this->idColumn];
+					$_SESSION['SESS_LEVEL'] = '0';
+					return true;
+				} else {
+					$_SESSION['LOG_ERR'] = true;
+					return false;
+				}
+			} else {
 				session_regenerate_id();
-				$_SESSION['SESS_MEMBER_ID'] = $row[$this->idColumn];
+				$_SESSION['SESS_MEMBER_ID'] = $row[$this->empIdColumn];
 				$_SESSION['SESS_LEVEL'] = $row[$this->userLevel];
 				return true;
-			} else {
-				$_SESSION['LOG_ERR'] = true;
-				return false;
 			}
 		} else {
 			return false;
 		}
+		 
 	}
 	
 	function register($username, $password, $level, $fname, $lname){
 		$con = $this->connect();
-		$result = $this->qry("SELECT * FROM ".$this->userTable." WHERE ".$this->userColumn."='%s';" , $username);
+		if($level == $this->candLevel) {
+			$result = $this->qry("SELECT * FROM ".$this->userTable." WHERE ".$this->userColumn."='%s';" , $username);
+		} else {
+			$result = $this->qry("SELECT * FROM ".$this->empTable." WHERE ".$this->empUserColumn."='%s';" , $username);
+		}
 		if(!$result) {
 			$_SESSION['REG_ERR'] = 'Database Error';
 			mysql_close($con);
@@ -90,8 +127,13 @@ class auth_emp {
 		$pwd = new PasswordHash(8, FALSE);
 		
 		$hash = $pwd->HashPassword($password);
-		$success = $this->qry("INSERT INTO ".$this->userTable." (".$this->userColumn.", ".$this->passColumn.", ".$this->userLevel.", ".$this->fnameColumn.", ".$this->lnameColumn.") 
-			VALUES ('%s', '%s', '%s', '%s', '%s')", $username, $hash, $level, $fname, $lname);
+		if($level == $this->candLevel) {
+			$success = $this->qry("INSERT INTO ".$this->userTable." (".$this->userColumn.", ".$this->passColumn.", ".$this->fnameColumn.", ".$this->lnameColumn.") 
+				VALUES ('%s', '%s', '%s', '%s')", $username, $hash, $fname, $lname);
+		} else {
+			$success = $this->qry("INSERT INTO ".$this->empTable." (".$this->empUserColumn.", ".$this->passColumn.", ".$this->userLevel.", ".$this->fnameColumn.", ".$this->lnameColumn.") 
+				VALUES ('%s', '%s', '%s', '%s', '%s')", $username, $hash, $level, $fname, $lname);
+		}
 		mysql_close($con);
 		if($success) {
 			return true;
@@ -115,6 +157,7 @@ class auth_emp {
 		
 		';
 		*/
+		echo "In lieu of an actual email, please copy the following URL into your browser: <br />";
 		echo $this->address.'?email='.$username.'&code='.$code;
 		return true;
 		
@@ -150,15 +193,25 @@ class auth_emp {
 			return false;
 		}
 		
-		$result = $this->qry("UPDATE ".$this->userTable." SET ".$this->active." = '1' WHERE ".$this->userColumn."='%s';" , $email);
-		mysql_close($con);
-		if($result) {
-			return true;
-		} else {
+		//Do all the stuff for a newly verified user;
+		$success = $this->qry("INSERT INTO ".$this->appTable." (".$this->idColumn.", ".$this->jobIdColumn.") 
+			VALUES ('%s', '%s')", $row[$this->idColumn], $this->baseJob);
+		if(!$success){
+			mysql_close($con);
 			$_SESSION['VER_ERR'] = 'Database Error';
 			return false;
 		}
-
+		
+		$result = $this->qry("UPDATE ".$this->userTable." SET ".$this->active." = '1' WHERE ".$this->userColumn."='%s';" , $email);
+		
+		mysql_close($con);
+		if(!$result) {
+			$_SESSION['VER_ERR'] = 'Database Error';
+			return false;
+		}
+		
+		return true;
+		
 	}
 	
 	function removeAccount($user){
