@@ -15,6 +15,7 @@ else:
 ?>
 <p>Greetings Admin!</p>
 <p><a href="empregister.php">Add Employee Account</a></p>
+<p><a href="showemp.php">Show Current Employee Accounts</a></p>
 <?php 
 	endif;
 ?>
