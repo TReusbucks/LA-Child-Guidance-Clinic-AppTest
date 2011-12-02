@@ -7,38 +7,35 @@
 
 <body>
 <?php
+include ("header.php");
 session_start();
-require_once ("class_auth.php");
-$log = new auth_emp();
-if(isset($_SESSION['SESS_LEVEL']) && ($_SESSION['SESS_LEVEL'] == $log->adminLevel || $_SESSION['SESS_LEVEL'] == $log->hrLevel)):
+require_once("cont/Cont_Post.php");
+$postCont = new Cont_Post();
+if(isset($_SESSION['SESS_LEVEL']) && ($_SESSION['SESS_LEVEL'] == $postCont->adminLevel || $_SESSION['SESS_LEVEL'] == $postCont->hrLevel)):
 ?>
-<form id="form1" name="form1" method="post" action="">
-  <img src="../home-header.jpg" alt="Los Angeles Child Guidance Clinic" width="1200" height="113" />
+<form id="form1" name="form1" method="post" action="createPost.php">
   <table>
   <tr>
 	  <td>Position Title</td>
 	  <td>
-		<input name="textfield" type="text" value="Clinic Supervisor" size="100" maxlength="100" />
+		<input name="title" type="text" size="100" maxlength="100" />
 	  </td>
   </tr>
   <tr>
   <td>Hiring Manager</td>
     <td><select name="select">
       <?php 
-		$con = $log->connect();
-		$result = $log->qry("SELECT * FROM ".$log->empTable." WHERE ".$log->userLevel."='%s';" , $log->hiringLevel);
-		if(!$result) {
-			mysql_close($con);
+		$mangs = $postCont->getHiringMangs();
+		if(!$mangs){
 			session_write_close();
 			header("location: dbError.php");
 			exit;
 		}
 		
-		while($row = mysql_fetch_assoc($result)){
-			echo '<option value="'.$row['empid'].'">'.$row['fname'].' '.$row['lname'].'</option>';
+		foreach($mangs as $mang){
+			echo '<option value="'.$mang['empid'].'">'.$mang['fname'].' '.$mang['lname'].'</option>';
 		}
-		mysql_close($con);
-	  ?><option value='0'>Assign Later</option>
+	  ?><option value='1'>Assign Later</option>
     </td>
 </tr>
 <tr>
@@ -63,6 +60,12 @@ if(isset($_SESSION['SESS_LEVEL']) && ($_SESSION['SESS_LEVEL'] == $log->adminLeve
   <td>Salary, Hours, and Benefits:</td>
   <td>
     <textarea name="perks" cols="100" rows="10"></textarea>
+  </td>
+  </tr>
+  <tr>
+  <td>Additional Questions:</td>
+  <td>
+    <textarea name="quests" cols="100" rows="10"></textarea>
   </td>
   </tr>
   </table>

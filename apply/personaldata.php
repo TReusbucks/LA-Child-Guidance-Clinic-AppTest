@@ -66,13 +66,13 @@ function redirect1()
 session_start();
 if(!isset($_SESSION['SESS_MEMBER_ID']) || (trim($_SESSION['SESS_MEMBER_ID']) == '')):
 	session_write_close();
-	header("location: login.php");
+	header("location: ../login.php");
 	exit;
 elseif($_SESSION['SESS_LEVEL'] != '0'):
 	session_write_close();
 	echo "This is an employee account!";
 else: 
-	require_once ("cont/Cont_App.php");
+	require_once ("../cont/Cont_App.php");
 	$app = new Cont_App();
 	
 	$user = $app->getPersonal($_SESSION['SESS_MEMBER_ID']);
@@ -81,7 +81,6 @@ else:
 		header("location: dbError.php");
 		exit;
 	}
-	
 ?>
 <h2> Personal Details </h2>
 <form method=POST action="updatePersonal.php">
@@ -122,7 +121,7 @@ else:
 
 </table>
 
-<input type ="submit" name = "savebtn" value = "Save" /> <input type ="button" name = "continuebtn" value = "Continue to Education Details" onClick= "redirect1()" />
+<input type ="submit" name = "savebtn" value = "Save Changes" /><input type ="button" name = "continuebtn" value = "Continue to Education Details" onClick="redirect1();" />
 
 </form>
 <?php

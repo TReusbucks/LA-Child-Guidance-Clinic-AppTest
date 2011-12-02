@@ -1,7 +1,7 @@
 <?php
-	require_once("class_auth.php");
+	require_once("cont/Cont_Auth.php");
 	session_start();
-	$log = new auth_emp();
+	$log = new Cont_Auth();
 
 	//$errflag = false;
 	

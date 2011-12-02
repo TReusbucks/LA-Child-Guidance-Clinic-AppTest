@@ -49,9 +49,11 @@ function check(form){
 </head>
 <body>
 <?php
+include ("header.php");
+
 session_start();
-require_once ("class_auth.php");
-$log = new auth_emp();
+require_once ("cont/Cont_Auth.php");
+$log = new Cont_Auth();
 if(isset($_SESSION['SESS_LEVEL']) && $_SESSION['SESS_LEVEL'] == $log->adminLevel): ?>
 <form action="createEmpAccount.php" method=POST onsubmit="return check(this);">
 <table>

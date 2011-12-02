@@ -1,0 +1,1 @@
+<a href="../index.php"><img src="../home-header.jpg" alt="LACGC" /></a>

@@ -76,7 +76,7 @@
 		exit;
 	} else {
 		session_write_close();
-		header("location: login.php");
+		header("location: ../login.php");
 		exit;
 	}
 ?>

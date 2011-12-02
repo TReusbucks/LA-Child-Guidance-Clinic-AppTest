@@ -1,7 +1,7 @@
 <?php
-	require_once ("class_auth.php");
+	require_once ("cont/Cont_Auth.php");
 	session_start();
-	$log = new auth_emp();
+	$log = new Cont_Auth();
 	$email = $_GET['email'];
 	$code = $_GET['code'];
 	if($log->verify($email, $code)){

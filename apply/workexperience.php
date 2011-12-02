@@ -206,6 +206,25 @@ function submitCheck(form){
 	return true;
 }
 
+function save(form){
+	var save = document.createElement("input");
+	save.setAttribute("type", "hidden");
+	save.setAttribute("name", "save");
+	save.setAttribute("value", "1");
+	form.appendChild(save);
+	
+	
+}
+
+function dontsave(form){
+	var save = document.createElement("input");
+	save.setAttribute("type", "hidden");
+	save.setAttribute("name", "save");
+	save.setAttribute("value", "0");
+	form.appendChild(save);
+		
+}
+
 </script>
 </head>
 
@@ -222,7 +241,7 @@ elseif($_SESSION['SESS_LEVEL'] != '0'):
 	echo "This is an employee account!";
 else: 
 ?>
-<form method=POST action="updateWork.php" onsubmit="submitCheck(this);">
+<form method=POST action="submitApp.php" onsubmit="submitCheck(this);">
 <h2> Work Experience</h2>
 
 <div id="divTables">
@@ -281,7 +300,7 @@ else:
 ?>
 </div>
 <input type ="button" name = "addworkbtn" value = "Add Another Work Experience" onclick="addWork();" /> <br />
-<input type ="submit" name = "savebtn" value = "Save" /><input type ="submit" name = "continuebtn" value = "Continue to Interests" onclick="redirect1();"/>
+<input type ="submit" name = "savebtn" value = "Save and Continue to Interests" onclick="save(this)" /><input type ="submit" name = "continuebtn" value = "Continue to Interests" onclick="dontsave(this);"/>
 
 </form>
 

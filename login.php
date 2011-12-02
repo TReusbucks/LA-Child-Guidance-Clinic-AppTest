@@ -18,6 +18,8 @@ function check(form){
 </head>
 <body>
 <?php
+include ("header.php");
+
 session_start();
 if(!isset($_SESSION['SESS_MEMBER_ID']) || (trim($_SESSION['SESS_MEMBER_ID']) == '')): ?>
 <form action="log.php" method=POST onsubmit="return check(this);">

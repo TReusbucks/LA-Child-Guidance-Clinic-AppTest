@@ -1,9 +1,9 @@
 <html>
 <body>
 <?php
-	require_once ("class_auth.php");
+	require_once ("cont/Cont_Auth.php");
 	session_start();
-	$log = new auth_emp();
+	$log = new Cont_Auth();
 	$user = @trim($_POST['username']);
 	$pass = @trim($_POST['password']);
 	$fname = @trim($_POST['fname']); 

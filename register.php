@@ -48,6 +48,9 @@ function check(form){
 </script>
 </head>
 <body>
+<?php
+	include ("header.php");
+?>
 <form action="createAppAccount.php" method=POST onsubmit="return check(this);">
 <table>
 	<tr>
