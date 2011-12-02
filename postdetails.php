@@ -30,13 +30,17 @@ else:
 	}
 if(!isset($_SESSION['SESS_MEMBER_ID']) || (trim($_SESSION['SESS_MEMBER_ID']) == '')):
 ?>
-<a href="register.php">Register</a> <a href="login.php">Login</a>
+<p><a href="register.php">Register</a> <a href="login.php">Login</a></p>
 <?php
 	elseif($_SESSION['SESS_LEVEL'] == '0'):
-		echo '<a href="apply.php?posid='.$row['posid'].'">Apply Now</a>';
+		echo '<p><a href="apply.php?posid='.$row['posid'].'">Apply Now</a></p>';
 	elseif($_SESSION['SESS_LEVEL'] == '1' || $_SESSION['SESS_LEVEL'] == '3'):
-		echo '<a href="editposition.php?posid='.$row['posid'].'">Edit Position</a>';
+		echo '<p><a href="editposition.php?posid='.$row['posid'].'">Edit Position</a></p>';
 	endif;
+	if(isset($_SESSION['ERRMSG'])){
+		echo "<p>".$_SESSION['ERRMSG']."</p>";
+		unset($_SESSION['ERRMSG']);
+	}
 endif;
 ?>
 </body>

@@ -21,7 +21,7 @@
 		echo $output;
 		
 		if(isset($_SESSION['ERRMSG'])){
-			echo $_SESSION['ERRMSG'];
+			echo "<p>".$_SESSION['ERRMSG']."</p>";
 			unset($_SESSION['ERRMSG']);
 		}
 	} else {

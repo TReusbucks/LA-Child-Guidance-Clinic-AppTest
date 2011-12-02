@@ -22,7 +22,7 @@
 		
 		$_SESSION['ERRMSG'] = "Post Successfully Changed!";
 		session_write_close();
-		header("location: showposts.php");
+		header("location: postdetails.php?posid=".$_POST['posid']);
 		exit;
 	} else{
 		echo "Hey, what's that over there??";
