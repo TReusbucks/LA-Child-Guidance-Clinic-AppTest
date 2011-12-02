@@ -234,7 +234,7 @@ session_start();
 include ("header.php");
 if(!isset($_SESSION['SESS_MEMBER_ID']) || (trim($_SESSION['SESS_MEMBER_ID']) == '')):
 	session_write_close();
-	header("location: login.php");
+	header("location: ../login.php");
 	exit;
 elseif($_SESSION['SESS_LEVEL'] != '0'):
 	session_write_close();
@@ -246,11 +246,11 @@ else:
 
 <div id="divTables">
 <?php
-	require_once ("cont/Cont_App.php");
+	require_once ("../cont/Cont_App.php");
 	$app = new Cont_App();
 	$work = $app->getWork($_SESSION['SESS_MEMBER_ID'], $app->baseJob);
 	if(!$work){
-		header("location: dbError.php");
+		header("location: ../dbError.php");
 		exit;
 	}
 	$length = count($work);

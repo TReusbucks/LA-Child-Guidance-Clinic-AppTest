@@ -2,7 +2,7 @@
 	session_start();
 	
 	if(isset($_SESSION['SESS_MEMBER_ID']) && (trim($_SESSION['SESS_MEMBER_ID']) != '')) {
-		require_once ("cont/Cont_App.php");
+		require_once ("../cont/Cont_App.php");
 		$app = new Cont_App();
 	
 		$numWork = $_POST['numWork']
@@ -38,10 +38,18 @@
 			$workXp[$i]['workPerf'] = $_SESSION['workPerf'];
 		}
 		
-		$app->setWork($_SESSION['SESS_MEMBER_ID'], $_SESSION['posid'], $numWork, $workXp);
+		if(!$app->setWork($_SESSION['SESS_MEMBER_ID'], $_SESSION['posid'], $numWork, $workXp)) {
+			session_write_close();
+			header("location: ../dbError.php");
+			exit;
+		}
 		
 		if($_POST['save'] == 1){
-			$app->setWork($_SESSION['SESS_MEMBER_ID'], $app->baseJob, $numWork, $workXp);
+			if(!$app->setWork($_SESSION['SESS_MEMBER_ID'], $app->baseJob, $numWork, $workXp)){
+				session_write_close();
+				header("location: ../dbError.php");
+				exit;
+			}
 		}
 		
 		header("location: ../index.php");

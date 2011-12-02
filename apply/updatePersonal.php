@@ -1,7 +1,7 @@
 <?php
 	session_start();
 	if(isset($_SESSION['SESS_MEMBER_ID']) && (trim($_SESSION['SESS_MEMBER_ID']) != '')) {
-		require_once ("cont/Cont_App.php");
+		require_once ("../cont/Cont_App.php");
 		
 		$cand = array();
 		$cand['lname'] = @trim($_POST['LName']);
@@ -66,7 +66,7 @@
 		$app = new Cont_App();
 		if(!$app->setPersonal($cand, $_SESSION['SESS_MEMBER_ID'])){
 			session_write_close();
-			header("location: dbError.php");
+			header("location: ../dbError.php");
 			exit;
 		}
 		

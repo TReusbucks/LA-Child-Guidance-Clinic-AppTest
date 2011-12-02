@@ -78,7 +78,7 @@ else:
 	$user = $app->getPersonal($_SESSION['SESS_MEMBER_ID']);
 	if(!$user){
 		session_write_close();
-		header("location: dbError.php");
+		header("location: ../dbError.php");
 		exit;
 	}
 ?>
