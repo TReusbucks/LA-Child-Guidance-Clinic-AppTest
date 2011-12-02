@@ -1,8 +1,8 @@
 <?php
 	session_start();
 	require_once ("cont/Cont_Post.php");
-	$log = new auth_emp();
-	if(isset($_SESSION['SESS_LEVEL']) && ($_SESSION['SESS_LEVEL'] == $log->adminLevel || $_SESSION['SESS_LEVEL'] == $log->hrLevel)) {
+	$postCont = new Cont_Post();
+	if(isset($_SESSION['SESS_LEVEL']) && ($_SESSION['SESS_LEVEL'] == $postCont->adminLevel || $_SESSION['SESS_LEVEL'] == $postCont->hrLevel)) {
 		$post = array();
 		$post['title'] = @trim($_POST['title']);
 		$post['desc'] = @trim($_POST['description']);

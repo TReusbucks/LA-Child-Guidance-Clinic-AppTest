@@ -2,7 +2,7 @@
 	session_start();
 	require_once ("cont/Cont_Post.php");
 	$postCont = new Cont_Post();
-	if(isset($_SESSION['SESS_LEVEL']) && ($_SESSION['SESS_LEVEL'] == $log->adminLevel || $_SESSION['SESS_LEVEL'] == $log->hrLevel)) {
+	if(isset($_SESSION['SESS_LEVEL']) && ($_SESSION['SESS_LEVEL'] == $postCont->adminLevel || $_SESSION['SESS_LEVEL'] == $postCont->hrLevel)) {
 		$post = array();
 		$post['title'] = @trim($_POST['title']);
 		$post['desc'] = @trim($_POST['description']);
@@ -11,6 +11,7 @@
 		$post['perks'] = @trim($_POST['perks']);
 		$post['quests'] = @trim($_POST['quests']);
 		$post['hman'] = @trim($_POST['select']);
+		$post['date'] = "CURDATE()";
 		
 		$success = $postCont->createPost($post, $_SESSION['SESS_MEMBER_ID']);
 		if(!$success){
