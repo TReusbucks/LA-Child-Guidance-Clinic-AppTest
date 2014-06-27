@@ -1,0 +1,82 @@
+CREATE TABLE `candidates` (
+  `userid` int unsigned NOT NULL auto_increment,
+  `useremail` varchar(60) NOT NULL default '',
+  `password` varchar(60) NOT NULL default '',
+  `fname` varchar(20) NOT NULL default '',
+  `lname` varchar(20) NOT NULL default '',
+  `minit` varchar(1) NOT NULL default '',
+  `address` varchar(60) NOT NULL default '',
+  `city` varchar(20) NOT NULL default '',
+  `state` varchar(2) NOT NULL default '',
+  `zip` mediumint(5) NOT NULL default '0',
+  `phone` varchar(15) NOT NULL default '',
+  `ssn` tinyint(4) NOT NULL,
+  `isEighteen` tinyint(1) NOT NULL default '1',
+  `hasTrans` tinyint(1) NOT NULL default '0',
+  `active` tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (`userid`)
+) engine = innodb;
+
+CREATE TABLE `employees` (
+  `empid` int unsigned NOT NULL auto_increment,
+  `empemail` varchar(60) NOT NULL default '',
+  `password` varchar(60) NOT NULL default '',
+  `userlevel` tinyint(1) NOT NULL default '1',
+  `fname` varchar(20) NOT NULL default '',
+  `lname` varchar(20) NOT NULL default '',
+  PRIMARY KEY  (`empid`)
+) engine = innodb;
+
+CREATE TABLE `positions` (
+  `posid` int unsigned NOT NULL auto_increment,
+  `jobTitle` varchar(20) NOT NULL default '',
+  `jobDes` varchar(200) NOT NULL default '',
+  `jobResp` varchar(200) NOT NULL default '',
+  `jobSalBen` varchar(200) NOT NULL default '',
+  `jobPostingDate` date,
+  `jobQuestions` varchar(200) NOT NULL default '',
+  PRIMARY KEY  (`posid`)
+) engine = innodb;
+
+CREATE TABLE `applications` (
+  `userid` int unsigned NOT NULL,
+  `posid` int unsigned NOT NULL,
+  `training` varchar(200) NOT NULL default '',
+  `military` varchar(200) NOT NULL default '',
+  PRIMARY KEY (`userid`, `posid`),
+  FOREIGN KEY (`userid`) REFERENCES candidates (`userid`),
+  FOREIGN KEY (`posid`) REFERENCES positions (`posid`)
+) engine = innodb;
+
+CREATE TABLE `education` (
+  `userid` int unsigned NOT NULL,
+  `posid` int unsigned NOT NULL,
+  `schoolid` tinyint unsigned NOT NULL auto_increment,
+  `name` varchar(30) NOT NULL default '',
+  `location` varchar(30) NOT NULL default '',
+  `isGrad` tinyint(1) NOT NULL default '0',
+  `major` varchar(20) NOT NULL default '',
+  PRIMARY KEY (`userid`, `posid`),
+  FOREIGN KEY (`userid`) REFERENCES candidates (`userid`),
+  FOREIGN KEY (`posid`) REFERENCES positions (`posid`)
+) engine = innodb;
+
+CREATE TABLE `workxp` (
+  `userid` int unsigned NOT NULL,
+  `posid` int unsigned NOT NULL,
+  `workid` tinyint unsigned NOT NULL,
+  `empname` varchar(50) NOT NULL default '',
+  `address` varchar(50) NOT NULL default '',
+  `phone` varchar(15) NOT NULL default '',
+  `supervisor` varchar(30) NOT NULL default '',
+  `reason` varchar(60) NOT NULL default '',
+  `startDate` date NOT NULL,
+  `endDate` date NOT NULL,
+  `startWage` varchar(15) NOT NULL default '',
+  `endWage` varchar(15) NOT NULL default '',
+  `title` varchar(15) NOT NULL default '',
+  `workPerformed` varchar(60) NOT NULL default '',
+  PRIMARY KEY (`userid`, `posid`, `workid`),
+  FOREIGN KEY (`userid`) REFERENCES candidates (`userid`),
+  FOREIGN KEY (`posid`) REFERENCES positions (`posid`)
+) engine = innodb;
